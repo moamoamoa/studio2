@@ -32,7 +32,7 @@ export const generateAIResponse = async (
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-latest', // Updated to a valid model alias
+      model: 'gemini-3-flash-preview',
       contents: prompt,
     });
 
