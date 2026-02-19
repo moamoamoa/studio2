@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Automation Chat</title>
+    <title>AI Automation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -18,16 +18,44 @@
           -ms-overflow-style: none;
           scrollbar-width: none;
       }
+      #root:empty::before {
+        content: 'Loading AI Automation...';
+        display: block;
+        text-align: center;
+        margin-top: 20%;
+        color: #64748b;
+        font-family: 'Quicksand', sans-serif;
+      }
     </style>
     <!-- Polyfill for process.env to prevent crashes in browser environments -->
     <script>
       window.process = window.process || { env: { NODE_ENV: 'production' } };
     </script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react/": "https://esm.sh/react@18.2.0/",
+        "react-dom": "https://esm.sh/react-dom@18.2.0",
+        "react-dom/": "https://esm.sh/react-dom@18.2.0/",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "lucide-react": "https://esm.sh/lucide-react@0.344.0?deps=react@18.2.0",
+        "@google/genai": "https://esm.sh/@google/genai"
+      }
     }
     </script>
 </head>
   <body class="bg-slate-50 text-slate-800 antialiased">
     <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
+    <script type="module" src="./index.tsx"></script>
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        console.error("Global Error:", message, error);
+        // Only show alert if root is still empty (app failed to mount)
+        if (document.getElementById('root').childElementCount === 0) {
+           console.warn("App failed to mount. Please check the console for details.");
+        }
+      };
+    </script>
   </body>
 </html>
