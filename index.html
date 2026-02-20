@@ -26,6 +26,21 @@
         color: #64748b;
         font-family: 'Quicksand', sans-serif;
       }
+      #crash-fallback {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #f8fafc;
+        z-index: 9999;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
     </style>
     <!-- Polyfill for process.env to ensure compatibility -->
     <script>
@@ -38,13 +53,49 @@
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "react/": "https://esm.sh/react@^19.2.4/",
     "lucide-react": "https://esm.sh/lucide-react@^0.574.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.42.0"
+    "@google/genai": "https://esm.sh/@google/genai@^1.42.0",
+    "firebase/app": "https://esm.sh/firebase@10.8.1/app",
+    "firebase/database": "https://esm.sh/firebase@10.8.1/database",
+    "firebase/": "https://esm.sh/firebase@^12.9.0/"
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-slate-50 text-slate-800 antialiased">
     <div id="root"></div>
+    
+    <!-- Fallback UI for initialization crashes -->
+    <div id="crash-fallback">
+      <h2 class="text-xl font-bold text-slate-800 mb-2">앱을 시작할 수 없습니다</h2>
+      <p class="text-slate-600 mb-6 max-w-sm">
+        설정된 Firebase 정보에 오류가 있거나 네트워크 문제일 수 있습니다.
+      </p>
+      <button 
+        onclick="localStorage.removeItem('ai_automation_firebase_config'); location.reload();"
+        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-xl shadow-lg shadow-red-200 transition-all active:scale-95"
+      >
+        설정 초기화 및 재시도
+      </button>
+    </div>
+
+    <script>
+      // If the app doesn't mount within 3 seconds, show the fallback UI
+      setTimeout(() => {
+        const root = document.getElementById('root');
+        if (!root || !root.hasChildNodes()) {
+          const fallback = document.getElementById('crash-fallback');
+          if (fallback) fallback.style.display = 'flex';
+          
+          // Hide the loading text
+          const style = document.createElement('style');
+          style.innerHTML = '#root:empty::before { display: none; }';
+          document.head.appendChild(style);
+        }
+      }, 3000);
+    </script>
+
     <script type="module" src="./index.tsx"></script>
-  </body>
+  <script type="module" src="/index.tsx"></script>
+</body>
 </html>
